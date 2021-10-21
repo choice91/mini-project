@@ -4,6 +4,7 @@
   "description": "연습용 프로젝트",
   "main": "app.js",
   "scripts": {
+    "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
   "repository": {
