@@ -11,8 +11,8 @@
       "name": "MIT"
     }
   },
-  "host": "my-practice-server.herokuapp.com",
-  "basePath": "/",
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/choice91/test_api/1.0.0",
   "tags": [
     {
       "name": "auth",
@@ -22,6 +22,40 @@
   "schemes": ["https"],
   "paths": {
     "/auth/signup": {
+      "put": {
+        "tags": ["auth"],
+        "summary": "회원가입",
+        "description": "회원가입",
+        "operationId": "signup",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "login",
+            "description": "user email and password",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "회원가입 성공",
+            "schema": {
+              "$ref": "#/definitions/inline_response_201"
+            }
+          },
+          "500": {
+            "description": "서버에러",
+            "schema": {
+              "$ref": "#/definitions/inline_response_500"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
       "post": {
         "tags": ["auth"],
         "summary": "로그인",
@@ -57,65 +91,30 @@
             "description": "server error"
           }
         }
-      },
-      "put": {
-        "tags": ["auth"],
-        "summary": "회원가입",
-        "description": "회원가입",
-        "operationId": "signup",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "login",
-            "description": "user email and password",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/login"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "회원가입 성공",
-            "schema": {
-              "$ref": "#/definitions/inline_response_201"
-            }
-          },
-          "500": {
-            "description": "서버에러",
-            "schema": {
-              "$ref": "#/definitions/inline_response_500"
-            }
-          }
-        }
       }
     }
   },
   "definitions": {
-    "inline_response_201": {
+    "users": {
       "type": "object",
       "properties": {
-        "ok": {
-          "type": "boolean",
-          "example": true
+        "_id": {
+          "type": "string"
         },
-        "message": {
-          "type": "string",
-          "example": "Signup success"
+        "email": {
+          "type": "string"
         },
-        "user": {
-          "type": "string",
-          "example": "6171778d1439cad12a2afbf7"
-        }
-      }
-    },
-    "inline_response_200": {
-      "type": "object",
-      "properties": {
-        "ok": {
-          "type": "boolean",
-          "example": true
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
         }
       }
     },
@@ -136,6 +135,31 @@
         }
       }
     },
+    "inline_response_201": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "Signup success"
+        },
+        "user": {
+          "type": "string",
+          "example": "6171778d1439cad12a2afbf7"
+        }
+      }
+    },
+    "inline_response_500": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "login_1": {
       "type": "object",
       "properties": {
@@ -149,11 +173,12 @@
         }
       }
     },
-    "inline_response_500": {
+    "inline_response_200": {
       "type": "object",
       "properties": {
-        "message": {
-          "type": "string"
+        "ok": {
+          "type": "boolean",
+          "example": true
         }
       }
     },
