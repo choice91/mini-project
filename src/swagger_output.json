@@ -1,0 +1,170 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API docs with Express",
+    "version": "1.0.0",
+    "title": "API 명세서",
+    "contact": {
+      "email": "wer1264@gmail.com"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "host": "my-practice-server.herokuapp.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "auth",
+      "description": "auth"
+    }
+  ],
+  "schemes": ["https"],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "로그인",
+        "description": "로그인",
+        "operationId": "login",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "login",
+            "description": "user email and password",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/login_1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "로그인 성공",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200"
+            }
+          },
+          "401": {
+            "description": "가입되지 않은 회원",
+            "schema": {
+              "$ref": "#/definitions/inline_response_401"
+            }
+          },
+          "500": {
+            "description": "server error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["auth"],
+        "summary": "회원가입",
+        "description": "회원가입",
+        "operationId": "signup",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "login",
+            "description": "user email and password",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "회원가입 성공",
+            "schema": {
+              "$ref": "#/definitions/inline_response_201"
+            }
+          },
+          "500": {
+            "description": "서버에러",
+            "schema": {
+              "$ref": "#/definitions/inline_response_500"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "inline_response_201": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "Signup success"
+        },
+        "user": {
+          "type": "string",
+          "example": "6171778d1439cad12a2afbf7"
+        }
+      }
+    },
+    "inline_response_200": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "aaa@gmail.com"
+        },
+        "name": {
+          "type": "string",
+          "example": "홍길동"
+        },
+        "password": {
+          "type": "string",
+          "example": "12345"
+        }
+      }
+    },
+    "login_1": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "aaa@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "12345"
+        }
+      }
+    },
+    "inline_response_500": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "inline_response_401": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "A user with this email could not be found."
+        }
+      }
+    }
+  }
+}

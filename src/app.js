@@ -1,17 +1,24 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 require("./db");
+
+const swaggerFile = require("./swagger_output");
 
 const authRouter = require("./routes/authRouter");
 
 const app = express();
 const logger = morgan("dev");
+app.use(cors());
 
 app.set("port", process.env.PORT || 4000);
 
 app.use(logger);
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use("/auth", authRouter);
 
