@@ -179,6 +179,18 @@
         "ok": {
           "type": "boolean",
           "example": true
+        },
+        "message": {
+          "type": "string",
+          "example": "Login success"
+        },
+        "token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxzdDExNDhAbmF2ZXIuY29tIiwidXNlcklkIjoiNjE3MTU5N2Y4YTM0YWFhZjdhMGI5MTdlIiwiaWF0IjoxNjM0ODMwNzA0LCJleHAiOjE2MzQ4MzQzMDR9.OfQAs7x35z3VDynBwexFiBAOI2voTv04RhW8HLUPuk4"
+        },
+        "userId": {
+          "type": "string",
+          "example": "6171597f8a34aaaf7a0b917e"
         }
       }
     },
