@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+const now = new Date();
+const year = now.getFullYear();
+const month = now.getMonth() + 1;
+const date = now.getDate();
+const signupDate = `${year}-${month >= 10 ? month : "0" + month}-${
+  date >= 10 ? date : "0" + date
+}`;
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -16,9 +24,7 @@ const userSchema = new mongoose.Schema({
   memberSince: {
     type: String,
     required: true,
-    default: new Date(
-      Date.now() - new Date().getTimezoneOffset() * 60000
-    ).toISOString(),
+    default: signupDate,
   },
 });
 

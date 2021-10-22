@@ -15,7 +15,7 @@ const signupValidate = [
 ];
 
 // /auth
-router.put("/signup", signupValidate, signup);
+router.post("/signup", signupValidate, signup);
 router.post("/login", login);
 
 module.exports = router;

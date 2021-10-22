@@ -23,7 +23,7 @@
   "schemes": ["https"],
   "paths": {
     "/auth/signup": {
-      "put": {
+      "post": {
         "tags": ["auth"],
         "summary": "회원가입",
         "description": "회원가입",
