@@ -1,10 +1,18 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
 const User = require("../models/user");
 
 // 회원가입
 exports.signup = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation error");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
   const { email, name, password } = req.body;
   try {
     // 비밀번호 해싱
