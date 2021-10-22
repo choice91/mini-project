@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.DB_URL);
+let url;
+if (process.env.NODE_ENV === "production") {
+  url = process.env.DB_URL;
+} else if (process.env.NODE_ENV === "development") {
+  url = process.env.TEST_DB_URL;
+}
+
+mongoose.connect(url);
 
 const db = mongoose.connection;
 

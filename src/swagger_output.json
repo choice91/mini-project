@@ -8,7 +8,8 @@
       "email": "wer1264@gmail.com"
     },
     "license": {
-      "name": "MIT"
+      "name": "MIT",
+      "url": "https://my-practice-server.herokuapp.com"
     }
   },
   "host": "virtserver.swaggerhub.com",
@@ -30,13 +31,25 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "in": "body",
-            "name": "login",
-            "description": "user email and password",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/login"
-            }
+            "name": "email",
+            "in": "query",
+            "description": "이메일 입력",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "비밀번호 입력",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "사용자 이름",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -65,13 +78,18 @@
         "produces": ["application/json"],
         "parameters": [
           {
-            "in": "body",
-            "name": "login",
-            "description": "user email and password",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/login_1"
-            }
+            "name": "email",
+            "in": "query",
+            "description": "이메일",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "비밀번호",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -118,23 +136,6 @@
         }
       }
     },
-    "login": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "example": "aaa@gmail.com"
-        },
-        "name": {
-          "type": "string",
-          "example": "홍길동"
-        },
-        "password": {
-          "type": "string",
-          "example": "12345"
-        }
-      }
-    },
     "inline_response_201": {
       "type": "object",
       "properties": {
@@ -157,19 +158,6 @@
       "properties": {
         "message": {
           "type": "string"
-        }
-      }
-    },
-    "login_1": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "example": "aaa@gmail.com"
-        },
-        "password": {
-          "type": "string",
-          "example": "12345"
         }
       }
     },

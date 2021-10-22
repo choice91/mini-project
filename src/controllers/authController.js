@@ -15,7 +15,6 @@ exports.signup = async (req, res, next) => {
       name,
       password: hashedPassword,
     });
-    console.log(user);
     return res
       .status(201)
       .json({ ok: true, message: "Signup success", user: user._id });
