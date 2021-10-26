@@ -10,15 +10,63 @@ exports.checkIn = async (req, res, next) => {
     if (info) {
       return res.status(200).json({ message: "이미 체크인 되었습니다." });
     }
-    await Attendance.create({
+    const checkInInfo = await Attendance.create({
       memberId: userId,
     });
-    return res.status(201).json({ message: "정상적으로 체크인 되었습니다." });
+    return res
+      .status(201)
+      .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
     next(error);
   }
-  return res.end();
+};
+
+exports.getAttInfo = async (req, res, next) => {
+  try {
+    // Attendance 모델의 모든 정보 검색
+    const attInfo = await Attendance.find({}).populate("memberId");
+    // 날짜별로 result배열에 저장
+    const result = [];
+    let object = {
+      date: attInfo[0].attDate,
+      users: [
+        {
+          _id: attInfo[0]._id,
+          time: attInfo[0].attDatetime,
+          name: attInfo[0].memberId.name,
+        },
+      ],
+    };
+    result.push(object);
+    for (let i = 1; i < attInfo.length; i++) {
+      if (attInfo[i].attDate === result[result.length - 1].date) {
+        result[result.length - 1].users.push({
+          _id: attInfo[i]._id,
+          time: attInfo[i].attDatetime,
+          name: attInfo[i].memberId.name,
+        });
+      } else {
+        object = {
+          date: attInfo[i].attDate,
+          users: [
+            {
+              _id: attInfo[i]._id,
+              time: attInfo[i].attDatetime,
+              name: attInfo[i].memberId.name,
+            },
+          ],
+        };
+        result.push(object);
+      }
+    }
+    return res.status(200).json({ ok: true, info: result });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
 };
