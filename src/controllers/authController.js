@@ -56,7 +56,7 @@ exports.login = async (req, res, next) => {
     // JWT 토큰 생성
     // 페이로드
     const payload = {
-      email: user.email,
+      name: user.name,
       userId: user._id.toString(),
     };
     // 옵션
