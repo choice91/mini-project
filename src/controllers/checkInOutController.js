@@ -1,11 +1,17 @@
 const Attendance = require("../models/attendance");
 
+const getDate = () => {
+  const [date, datetime] = new Date(Date.now() + 1000 * 60 * 60 * 9)
+    .toISOString()
+    .split("T");
+  const time = datetime.split(".")[0];
+  return { date, time };
+};
+
 exports.checkIn = async (req, res, next) => {
   const { userId } = req;
   try {
-    const [date, datetime] = new Date(Date.now() + 1000 * 60 * 60 * 9)
-      .toISOString()
-      .split("T");
+    const { date, time } = getDate();
     const info = await Attendance.findOne({ memberId: userId, attDate: date });
     if (info) {
       return res.status(200).json({ message: "이미 체크인 되었습니다." });
@@ -63,6 +69,34 @@ exports.getAttInfo = async (req, res, next) => {
       }
     }
     return res.status(200).json({ ok: true, info: result });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+};
+
+exports.isCheckIn = async (req, res, next) => {
+  const { userId } = req;
+  const { date, time } = getDate();
+  try {
+    const attInfo = await Attendance.findOne({
+      memberId: userId,
+      attDate: date,
+    });
+    if (attInfo) {
+      return res.status(200).json({
+        message: "이미 체크인된 사용자입니다.",
+        isCheckIn: true,
+        id: attInfo.memberId,
+        date: attInfo.attDate,
+        time: attInfo.attDatetime,
+      });
+    }
+    return res
+      .status(200)
+      .json({ message: "체크인된 사용자가 아닙니다.", isCheckIn: false });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
