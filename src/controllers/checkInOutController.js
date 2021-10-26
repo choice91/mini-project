@@ -34,7 +34,9 @@ exports.checkIn = async (req, res, next) => {
 exports.getAttInfo = async (req, res, next) => {
   try {
     // Attendance 모델의 모든 정보 검색
-    const attInfo = await Attendance.find({}).populate("memberId");
+    const attInfo = await Attendance.find({})
+      .sort({ attDate: "desc" })
+      .populate("memberId");
     // 날짜별로 result배열에 저장
     const result = [];
     let object = {
