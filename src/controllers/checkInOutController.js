@@ -23,10 +23,12 @@ exports.checkIn = async (req, res, next) => {
   } = req;
   const { date, time } = getDate();
   try {
-    const info = await Attendance.findOne({ memberId: userId, attDate: date });
+    const info = await Attendance.findOne({ memberId: userId }).sort({
+      attDate: "desc",
+    });
     console.log("info ::", info);
     console.log("date time ::", date, time);
-    if (info) {
+    if (info.attDate === date) {
       return res.status(200).json({ message: "이미 체크인 되었습니다." });
     }
     const checkInInfo = await Attendance.create({
