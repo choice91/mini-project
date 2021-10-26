@@ -26,19 +26,19 @@ exports.checkIn = async (req, res, next) => {
     const info = await Attendance.findOne({ memberId: userId }).sort({
       attDate: "desc",
     });
+    if (!info || info.attDate !== date) {
+      const checkInInfo = await Attendance.create({
+        memberId: userId,
+        attDatetime: time,
+        message: message || "😊",
+      });
+      return res
+        .status(201)
+        .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
+    }
     console.log("info ::", info);
     console.log("date time ::", date, time);
-    if (info.attDate === date) {
-      return res.status(200).json({ message: "이미 체크인 되었습니다." });
-    }
-    const checkInInfo = await Attendance.create({
-      memberId: userId,
-      attDatetime: time,
-      message: message || "😊",
-    });
-    return res
-      .status(201)
-      .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
+    return res.status(200).json({ message: "이미 체크인 되었습니다." });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
