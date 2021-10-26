@@ -1,4 +1,5 @@
 const Attendance = require("../models/attendance");
+const { validationResult } = require("express-validator");
 
 const getDate = () => {
   const [date, datetime] = new Date(Date.now() + 1000 * 60 * 60 * 9)
@@ -9,7 +10,17 @@ const getDate = () => {
 };
 
 exports.checkIn = async (req, res, next) => {
-  const { userId } = req;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation error");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+  const {
+    userId,
+    body: { message },
+  } = req;
   try {
     const { date, time } = getDate();
     const info = await Attendance.findOne({ memberId: userId, attDate: date });
@@ -19,6 +30,7 @@ exports.checkIn = async (req, res, next) => {
     const checkInInfo = await Attendance.create({
       memberId: userId,
       attDatetime: time,
+      message: message || "😊",
     });
     return res
       .status(201)
@@ -46,6 +58,7 @@ exports.getAttInfo = async (req, res, next) => {
           _id: attInfo[0]._id,
           time: attInfo[0].attDatetime,
           name: attInfo[0].memberId.name,
+          message: attInfo[0].message,
         },
       ],
     };
@@ -56,6 +69,7 @@ exports.getAttInfo = async (req, res, next) => {
           _id: attInfo[i]._id,
           time: attInfo[i].attDatetime,
           name: attInfo[i].memberId.name,
+          message: attInfo[i].message,
         });
       } else {
         object = {
@@ -65,6 +79,7 @@ exports.getAttInfo = async (req, res, next) => {
               _id: attInfo[i]._id,
               time: attInfo[i].attDatetime,
               name: attInfo[i].memberId.name,
+              message: attInfo[i].message,
             },
           ],
         };

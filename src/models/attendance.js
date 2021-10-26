@@ -19,6 +19,9 @@ const attendanceSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  message: {
+    type: String,
+  },
 });
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);

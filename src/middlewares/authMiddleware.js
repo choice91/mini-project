@@ -1,4 +1,14 @@
 const jwt = require("jsonwebtoken");
+const { body } = require("express-validator");
+
+exports.signupValidate = [
+  body("email").isEmail().normalizeEmail().withMessage("Invalid email"),
+  body("password")
+    .trim()
+    .isLength({ min: 5 })
+    .withMessage("The password must be at least 5 letters"),
+  body("name").notEmpty().withMessage("Please enter your name"),
+];
 
 exports.isAuth = (req, res, next) => {
   const authHeader = req.get("Authorization");
