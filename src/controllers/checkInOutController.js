@@ -18,6 +18,7 @@ exports.checkIn = async (req, res, next) => {
     }
     const checkInInfo = await Attendance.create({
       memberId: userId,
+      attDatetime: time,
     });
     return res
       .status(201)
