@@ -21,9 +21,12 @@ exports.checkIn = async (req, res, next) => {
     userId,
     body: { message },
   } = req;
+  const { date, time } = getDate();
   try {
-    const { date, time } = getDate();
     const info = await Attendance.findOne({ memberId: userId, attDate: date });
+    console.log("info ::", info);
+    console.log("date ::", date, info.attDate);
+    console.log("userId ::", userId, info.memberId);
     if (info) {
       return res.status(200).json({ message: "이미 체크인 되었습니다." });
     }
