@@ -36,8 +36,6 @@ exports.checkIn = async (req, res, next) => {
         .status(201)
         .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
     }
-    console.log("info ::", info);
-    console.log("date time ::", date, time);
     return res.status(200).json({ message: "이미 체크인 되었습니다." });
   } catch (error) {
     if (!error.statusCode) {
@@ -53,6 +51,9 @@ exports.getAttInfo = async (req, res, next) => {
     const attInfo = await Attendance.find({})
       .sort({ attDate: "desc" })
       .populate("memberId");
+    if (attInfo.length === 0) {
+      return res.status(200).json({ message: "출석 정보를 찾을 수 없습니다." });
+    }
     // 날짜별로 result배열에 저장
     const result = [];
     let object = {
