@@ -17,7 +17,11 @@
   "tags": [
     {
       "name": "auth",
-      "description": "auth"
+      "description": "회원가입, 로그인 인증"
+    },
+    {
+      "name": "attendance",
+      "description": "출석체크"
     }
   ],
   "schemes": ["https"],
@@ -110,6 +114,104 @@
           }
         }
       }
+    },
+    "/attandance/checkIn": {
+      "post": {
+        "tags": ["attendance"],
+        "summary": "체크인",
+        "description": "Check In",
+        "operationId": "CheckIn",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "이미 체크인 된 사용자",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_1"
+            }
+          },
+          "201": {
+            "description": "체크인",
+            "schema": {
+              "$ref": "#/definitions/inline_response_201_1"
+            }
+          },
+          "500": {
+            "description": "server error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/attandance/attInfo": {
+      "get": {
+        "tags": ["attendance"],
+        "summary": "모든 체크인 정보 확인",
+        "description": "All Check In Info",
+        "operationId": "CheckInInfo",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "체크인 정보 확인",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_2"
+            }
+          },
+          "500": {
+            "description": "server error"
+          }
+        }
+      }
+    },
+    "/attandance/isCheckIn": {
+      "post": {
+        "tags": ["attendance"],
+        "summary": "로그인한 사용자가 체크인한지 확인",
+        "description": "User CheckIn",
+        "operationId": "UserCheckIn",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "체크인 가능한 사용자",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_3"
+            }
+          },
+          "500": {
+            "description": "server error"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   },
   "definitions": {
@@ -188,6 +290,112 @@
         "message": {
           "type": "string",
           "example": "A user with this email could not be found."
+        }
+      }
+    },
+    "inline_response_200_1": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "이미 체크인 되었습니다."
+        }
+      }
+    },
+    "inline_response_201_1_info": {
+      "type": "object",
+      "properties": {
+        "attDate": {
+          "type": "string",
+          "example": "2021-10-26."
+        },
+        "attDatetime": {
+          "type": "string",
+          "example": "59103"
+        },
+        "memberId": {
+          "type": "string",
+          "example": "6176a84718e0cfdbdb92deb6"
+        },
+        "_id": {
+          "type": "string",
+          "example": "6177af82325137851e104b5c"
+        },
+        "__v": {
+          "type": "number",
+          "example": 0
+        }
+      }
+    },
+    "inline_response_201_1": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "정상적으로 체크인 되었습니다."
+        },
+        "info": {
+          "$ref": "#/definitions/inline_response_201_1_info"
+        }
+      }
+    },
+    "inline_response_200_2_users": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "61767397a1bef58000abbd1c"
+        },
+        "time": {
+          "type": "string",
+          "example": "65171"
+        },
+        "name": {
+          "type": "string",
+          "example": "홍길동"
+        }
+      }
+    },
+    "inline_response_200_2_info": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "example": "2021-10-26."
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/inline_response_200_2_users"
+          }
+        }
+      }
+    },
+    "inline_response_200_2": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
+        },
+        "info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/inline_response_200_2_info"
+          }
+        }
+      }
+    },
+    "inline_response_200_3": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "체크인된 사용자가 아닙니다."
+        },
+        "isCheckIn": {
+          "type": "boolean",
+          "example": false
         }
       }
     }
