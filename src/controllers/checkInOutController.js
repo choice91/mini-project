@@ -36,6 +36,8 @@ exports.checkIn = async (req, res, next) => {
         .status(201)
         .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
     }
+    console.log("info ::", info);
+    console.log("date time ::", date, time);
     return res.status(200).json({ message: "이미 체크인 되었습니다." });
   } catch (error) {
     if (!error.statusCode) {
