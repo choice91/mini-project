@@ -17,7 +17,7 @@ exports.signup = async (req, res, next) => {
   try {
     const emailExists = await User.exists({ email: email });
     if (emailExists) {
-      return res.status(200).json({ message: "이미 가입된 이메일입니다." });
+      return res.status(409).json({ message: "이미 가입된 이메일입니다." });
     }
     // 비밀번호 해싱
     const hashedPassword = await bcrypt.hash(password, 12);
