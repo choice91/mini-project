@@ -22,7 +22,7 @@ exports.isAuth = (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, process.env.JWT_KEY);
   } catch (error) {
-    error.statusCode = 500;
+    error.statusCode = 401;
     error.message = "다시 로그인해주세요.";
     throw error;
   }
