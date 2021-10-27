@@ -22,15 +22,20 @@ exports.isAuth = (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, process.env.JWT_KEY);
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      error.statusCode = 498;
+      error.message = "토큰 유효기간 만료";
+      throw error;
+    }
     error.statusCode = 401;
-    error.message = "다시 로그인해주세요.";
+    error.message = "인증되지 않음";
     throw error;
   }
-  if (!decodedToken) {
-    const error = new Error("인증되지 않음");
-    error.statusCode = 401;
-    throw error;
-  }
+  // if (!decodedToken) {
+  //   const error = new Error("인증되지 않음");
+  //   error.statusCode = 401;
+  //   throw error;
+  // }
   req.userId = decodedToken.userId;
   next();
 };
