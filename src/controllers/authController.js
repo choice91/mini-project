@@ -15,6 +15,10 @@ exports.signup = async (req, res, next) => {
   }
   const { email, name, password } = req.body;
   try {
+    const emailExists = await User.exists({ email: email });
+    if (emailExists) {
+      return res.status(200).json({ message: "이미 가입된 이메일입니다." });
+    }
     // 비밀번호 해싱
     const hashedPassword = await bcrypt.hash(password, 12);
     // 회원가입
@@ -25,7 +29,7 @@ exports.signup = async (req, res, next) => {
     });
     return res
       .status(201)
-      .json({ ok: true, message: "Signup success", user: user._id });
+      .json({ ok: true, message: "회원가입 성공", user: user._id });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -41,7 +45,7 @@ exports.login = async (req, res, next) => {
     // 로그인 한 사용자가 있는지 확인
     const user = await User.findOne({ email });
     if (!user) {
-      const error = new Error("A user with this email could not be found.");
+      const error = new Error("이 이메일을 가진 사용자를 찾을 수 없습니다.");
       error.statusCode = 401;
       throw error;
     }
@@ -49,7 +53,7 @@ exports.login = async (req, res, next) => {
     const isEqual = await bcrypt.compare(password, user.password);
     // 비밀번호가 일치하지 않으면 에러발생
     if (!isEqual) {
-      const error = new Error("Wrong password.");
+      const error = new Error("비밀번호 틀림");
       error.statusCode = 401;
       throw error;
     }
@@ -65,7 +69,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.JWT_KEY, options);
     return res.status(200).json({
       ok: true,
-      message: "Login success",
+      message: "로그인 성공",
       token,
       userId: user._id.toString(),
     });
