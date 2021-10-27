@@ -29,6 +29,7 @@ exports.checkIn = async (req, res, next) => {
     if (!info || info.attDate !== date) {
       const checkInInfo = await Attendance.create({
         memberId: userId,
+        attDate: date,
         attDatetime: time,
         message: message || "😊",
       });
