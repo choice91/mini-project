@@ -114,33 +114,3 @@ exports.getAttInfo = async (req, res, next) => {
     next(error);
   }
 };
-
-exports.isCheckIn = async (req, res, next) => {
-  const { userId } = req;
-  const { date, time } = getDate();
-  try {
-    const attInfo = await Attendance.findOne({
-      memberId: userId,
-      attDate: date,
-    });
-    // attInfo가 있으면 이미 체크인된 사용자
-    if (attInfo) {
-      return res.status(200).json({
-        message: "이미 체크인된 사용자입니다.",
-        isCheckIn: true,
-        id: attInfo.memberId,
-        date: attInfo.attDate,
-        time: attInfo.attDatetime,
-      });
-    }
-    // attInfo가 null이면 체크인되지 않은 사용자
-    return res
-      .status(200)
-      .json({ message: "체크인된 사용자가 아닙니다.", isCheckIn: false });
-  } catch (error) {
-    if (!error.statusCode) {
-      error.statusCode = 500;
-    }
-    next(error);
-  }
-};
