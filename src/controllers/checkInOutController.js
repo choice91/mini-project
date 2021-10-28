@@ -1,6 +1,7 @@
 const Attendance = require("../models/attendance");
 const { validationResult } = require("express-validator");
 
+// 현재시간을 반환하는 함수
 const getDate = () => {
   const [date, datetime] = new Date(Date.now() + 1000 * 60 * 60 * 9)
     .toISOString()
@@ -37,8 +38,6 @@ exports.checkIn = async (req, res, next) => {
         .status(201)
         .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
     }
-    console.log("info ::", info);
-    console.log("date time ::", date, time);
     return res.status(200).json({ message: "이미 체크인 되었습니다." });
   } catch (error) {
     if (!error.statusCode) {
@@ -49,10 +48,16 @@ exports.checkIn = async (req, res, next) => {
 };
 
 exports.getAttInfo = async (req, res, next) => {
+  // 현재 페이지
+  const currentPage = req.query.page || 1;
+  // 한페이지에 보여줄 게시물의 수
+  const perPage = 8;
   try {
-    // Attendance 모델의 모든 정보 검색
+    // Attendance 모델의 모든 정보 검색 (페이지네이션)
     const attInfo = await Attendance.find({})
       .sort({ attDate: "desc" })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage)
       .populate("memberId");
     if (attInfo.length === 0) {
       return res.status(200).json({ message: "출석 정보를 찾을 수 없습니다." });
