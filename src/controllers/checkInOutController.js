@@ -54,12 +54,10 @@ exports.getAttInfo = async (req, res, next) => {
   const perPage = 8;
   try {
     // 모든 데이터의 개수
-    const totalItems = await Attendance.find({}).countDocuments();
+    // const totalItems = await Attendance.find({}).countDocuments();
     // Attendance 모델의 모든 정보 검색 (페이지네이션)
     const attInfo = await Attendance.find({})
       .sort({ attDate: "desc" })
-      .skip((currentPage - 1) * perPage)
-      .limit(perPage)
       .populate("memberId");
     if (attInfo.length === 0) {
       return res.status(200).json({ message: "출석 정보를 찾을 수 없습니다." });
@@ -101,9 +99,14 @@ exports.getAttInfo = async (req, res, next) => {
         result.push(object);
       }
     }
+    const perPageResult = result.slice(
+      (currentPage - 1) * perPage,
+      currentPage * 8
+    );
+    const totalItems = result.length;
     return res
       .status(200)
-      .json({ ok: true, info: result, totalItems: totalItems });
+      .json({ ok: true, info: perPageResult, totalItems: totalItems });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
