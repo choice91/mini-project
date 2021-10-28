@@ -53,6 +53,8 @@ exports.getAttInfo = async (req, res, next) => {
   // 한페이지에 보여줄 게시물의 수
   const perPage = 8;
   try {
+    // 모든 데이터의 개수
+    const totalItems = await Attendance.find({}).countDocuments();
     // Attendance 모델의 모든 정보 검색 (페이지네이션)
     const attInfo = await Attendance.find({})
       .sort({ attDate: "desc" })
@@ -99,7 +101,9 @@ exports.getAttInfo = async (req, res, next) => {
         result.push(object);
       }
     }
-    return res.status(200).json({ ok: true, info: result });
+    return res
+      .status(200)
+      .json({ ok: true, info: result, totalItems: totalItems });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
