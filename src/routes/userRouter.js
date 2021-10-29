@@ -14,7 +14,7 @@ const router = express.Router();
 
 // /user
 router.get("/profile", isAuth, getUserProfile);
-router.post("/changePwd", isAuth, changePassword);
-router.post("/changeProfile", isAuth, changeProfile);
+router.put("/changePwd", isAuth, changePassword);
+router.put("/changeProfile", isAuth, changeProfile);
 
 module.exports = router;
