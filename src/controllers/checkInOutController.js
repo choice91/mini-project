@@ -10,6 +10,7 @@ const getDate = () => {
   return { date, time };
 };
 
+// 체크인
 exports.checkIn = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -47,6 +48,7 @@ exports.checkIn = async (req, res, next) => {
   }
 };
 
+// 출석정보 검색
 exports.getAttInfo = async (req, res, next) => {
   // 현재 페이지
   const currentPage = req.query.page || 1;
