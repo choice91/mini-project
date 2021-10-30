@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 
 const User = require("../models/user");
+const Attendance = require("../models/attendance");
 
 // 사용자 프로필 정보 검색
 exports.getUserProfile = async (req, res, next) => {
@@ -13,7 +14,19 @@ exports.getUserProfile = async (req, res, next) => {
         .status(204)
         .json({ ok: false, message: "사용자 정보를 찾을 수 없습니다." });
     }
-    return res.status(200).json({ ok: true, user: user });
+    // 사용자의 출석한 날
+    const daysOfAttendance = await Attendance.find({ memberId: userId });
+    if (!daysOfAttendance) {
+      return res
+        .status(204)
+        .json({ ok: false, message: "출석 정보 조회 실패" });
+    }
+    return res.status(200).json({
+      ok: true,
+      user: user,
+      daysOfAttendance: daysOfAttendance,
+      numberOfDaysOfAtt: daysOfAttendance.length,
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
