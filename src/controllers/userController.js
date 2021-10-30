@@ -8,14 +8,21 @@ exports.getUserProfile = async (req, res, next) => {
   const { userId } = req;
   try {
     // 사용자정보 검색
-    const user = await User.findById(userId);
+    const user = await User.findById(userId, {
+      email: 1,
+      name: 1,
+      memberSince: 1,
+    });
     if (!user) {
       return res
         .status(204)
         .json({ ok: false, message: "사용자 정보를 찾을 수 없습니다." });
     }
     // 사용자의 출석한 날
-    const daysOfAttendance = await Attendance.find({ memberId: userId });
+    const daysOfAttendance = await Attendance.find(
+      { memberId: userId },
+      { attDate: 1, attDatetime: 1, message: 1 }
+    ).sort({ attDate: "desc" });
     if (!daysOfAttendance) {
       return res
         .status(204)
