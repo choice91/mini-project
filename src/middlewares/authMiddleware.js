@@ -11,7 +11,6 @@ exports.signupValidate = [
 ];
 
 exports.isAuth = (req, res, next) => {
-  console.log(req);
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     const error = new Error("인증되지 않음");
