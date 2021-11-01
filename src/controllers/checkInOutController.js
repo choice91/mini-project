@@ -64,6 +64,7 @@ exports.getAttInfo = async (req, res, next) => {
     if (attInfo.length === 0) {
       return res.status(200).json({ message: "출석 정보를 찾을 수 없습니다." });
     }
+    console.log(attInfo);
     // 날짜별로 result배열에 저장
     const result = [];
     let object = {
@@ -81,7 +82,10 @@ exports.getAttInfo = async (req, res, next) => {
     };
     result.push(object);
     for (let i = 1; i < attInfo.length; i++) {
-      if (attInfo[i].attDate === result[result.length - 1].date) {
+      if (
+        moment(attInfo[i].attDate).format("YYYY년 M월 D일 dd") ===
+        result[result.length - 1].date
+      ) {
         result[result.length - 1].users.push({
           _id: attInfo[i]._id,
           time: moment(`2000-01-01 ${attInfo[i].attDatetime}`)
