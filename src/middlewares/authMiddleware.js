@@ -11,13 +11,17 @@ exports.signupValidate = [
 ];
 
 exports.isAuth = (req, res, next) => {
-  const authHeader = req.get("Authorization");
+  console.log(req);
+  const authHeader = req.headers.authorization;
   if (!authHeader) {
     const error = new Error("인증되지 않음");
     error.statusCode = 401;
     throw error;
   }
-  const token = authHeader.split(" ")[1];
+  const [type, token] = authHeader.split(" ");
+  if (type !== "Bearer") {
+    return res.status(401).json({ message: "로그인 후 이용하세요" });
+  }
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, process.env.JWT_KEY);
