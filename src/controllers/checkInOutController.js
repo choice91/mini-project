@@ -36,22 +36,22 @@ exports.checkIn = async (req, res, next) => {
     body: { message },
   } = req;
   try {
+    const { date, time } = getDate();
     const info = await Attendance.findOne({ memberId: userId }).sort({
       attDate: "desc",
     });
-    if (!info || info.attDate.split(" ")[0] !== moment().format("YYYY-MM-DD")) {
-      const { date, time } = getDate();
-      const checkInInfo = await Attendance.create({
-        memberId: userId,
-        attDate: date,
-        attDatetime: time,
-        message: message || "😊",
-      });
-      return res
-        .status(201)
-        .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
+    if (info.attDate === date) {
+      return res.status(200).json({ message: "이미 체크인 되었습니다." });
     }
-    return res.status(200).json({ message: "이미 체크인 되었습니다." });
+    const checkInInfo = await Attendance.create({
+      memberId: userId,
+      attDate: date,
+      attDatetime: time,
+      message: message || "😊",
+    });
+    return res
+      .status(201)
+      .json({ message: "정상적으로 체크인 되었습니다.", info: checkInInfo });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
