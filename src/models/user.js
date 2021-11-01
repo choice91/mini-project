@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
-
-const [date, datetime] = new Date(Date.now() + 1000 * 60 * 60 * 9)
-  .toISOString()
-  .split("T");
+const moment = require("moment");
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -20,7 +17,7 @@ const userSchema = new mongoose.Schema({
   memberSince: {
     type: String,
     required: true,
-    default: `${date} ${datetime.split(".")[0]}`,
+    default: moment().format("YYYY-MM-DD HH:mm:ss"),
   },
 });
 

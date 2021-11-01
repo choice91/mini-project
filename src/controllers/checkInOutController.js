@@ -1,12 +1,14 @@
 const Attendance = require("../models/attendance");
 const { validationResult } = require("express-validator");
+const moment = require("moment");
+require("moment-timezone");
+require("moment/locale/ko");
+
+moment.tz.setDefault("Asia/Seoul");
 
 // 현재시간을 반환하는 함수
 const getDate = () => {
-  const [date, datetime] = new Date(Date.now() + 1000 * 60 * 60 * 9)
-    .toISOString()
-    .split("T");
-  const time = datetime.split(".")[0];
+  const [date, time] = moment().format("YYYY-MM-DD HH:mm:ss").split(" ");
   return { date, time };
 };
 
@@ -55,8 +57,6 @@ exports.getAttInfo = async (req, res, next) => {
   // 한페이지에 보여줄 게시물의 수
   const perPage = 8;
   try {
-    // 모든 데이터의 개수
-    // const totalItems = await Attendance.find({}).countDocuments();
     // Attendance 모델의 모든 정보 검색 (페이지네이션)
     const attInfo = await Attendance.find({})
       .sort({ attDate: "desc" })
@@ -67,11 +67,13 @@ exports.getAttInfo = async (req, res, next) => {
     // 날짜별로 result배열에 저장
     const result = [];
     let object = {
-      date: attInfo[0].attDate,
+      date: moment(attInfo[0].attDate).format("YYYY년 M월 D일 dd"),
       users: [
         {
           _id: attInfo[0]._id,
-          time: attInfo[0].attDatetime,
+          time: moment(`2000-01-01 ${attInfo[0].attDatetime}`)
+            .format("YY-M-D A h시 m분")
+            .slice(7, 16),
           name: attInfo[0].memberId.name,
           message: attInfo[0].message,
         },
@@ -82,17 +84,21 @@ exports.getAttInfo = async (req, res, next) => {
       if (attInfo[i].attDate === result[result.length - 1].date) {
         result[result.length - 1].users.push({
           _id: attInfo[i]._id,
-          time: attInfo[i].attDatetime,
+          time: moment(`2000-01-01 ${attInfo[i].attDatetime}`)
+            .format("YY-M-D A h시 m분")
+            .slice(7, 16),
           name: attInfo[i].memberId.name,
           message: attInfo[i].message,
         });
       } else {
         object = {
-          date: attInfo[i].attDate,
+          date: moment(attInfo[i].attDate).format("YYYY년 M월 D일 dd"),
           users: [
             {
               _id: attInfo[i]._id,
-              time: attInfo[i].attDatetime,
+              time: moment(`2000-01-01 ${attInfo[i].attDatetime}`)
+                .format("YY-M-D A h시 m분")
+                .slice(7, 16),
               name: attInfo[i].memberId.name,
               message: attInfo[i].message,
             },
