@@ -17,7 +17,7 @@ const dateFormatFn = (date, time) => {
   const result = moment(`${date} ${time}`)
     .format("YYYY년 M월 D일 dd A h시 m분")
     .split(" ");
-  const formatDate = `${result[0]} ${result[1]} ${result[2]} ${result[3]}`;
+  const formatDate = `${result[0]} ${result[1]} ${result[2]} (${result[3]})`;
   const formatTime = `${result[4]} ${result[5]} ${result[6]}`;
   return { formatDate, formatTime };
 };
