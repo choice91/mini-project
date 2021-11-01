@@ -12,6 +12,16 @@ const getDate = () => {
   return { date, time };
 };
 
+// 날짜시간을 한글로 포맷
+const dateFormatFn = (date, time) => {
+  const result = moment(`${date} ${time}`)
+    .format("YYYY년 M월 D일 dd A h시 m분")
+    .split(" ");
+  const formatDate = `${result[0]} ${result[1]} ${result[2]} ${result[3]}`;
+  const formatTime = `${result[4]} ${result[5]} ${result[6]}`;
+  return { formatDate, formatTime };
+};
+
 // 체크인
 exports.checkIn = async (req, res, next) => {
   const errors = validationResult(req);
@@ -25,12 +35,12 @@ exports.checkIn = async (req, res, next) => {
     userId,
     body: { message },
   } = req;
-  const { date, time } = getDate();
   try {
     const info = await Attendance.findOne({ memberId: userId }).sort({
       attDate: "desc",
     });
-    if (!info || info.attDate !== date) {
+    if (!info || info.attDate.split(" ")[0] !== moment().format("YYYY-MM-DD")) {
+      const { date, time } = getDate();
       const checkInInfo = await Attendance.create({
         memberId: userId,
         attDate: date,
@@ -62,18 +72,21 @@ exports.getAttInfo = async (req, res, next) => {
       .sort({ attDate: "desc" })
       .populate("memberId");
     if (attInfo.length === 0) {
-      return res.status(200).json({ message: "출석 정보를 찾을 수 없습니다." });
+      return res.status(401).json({ message: "출석 정보를 찾을 수 없습니다." });
     }
+    // DB의 날짜와 시간 포맷
+    const { formatDate, formatTime } = dateFormatFn(
+      attInfo[0].attDate,
+      attInfo[0].attDatetime
+    );
     // 날짜별로 result배열에 저장
     const result = [];
     let object = {
-      date: moment(attInfo[0].attDate).format("YYYY년 M월 D일 dd"),
+      date: formatDate,
       users: [
         {
           _id: attInfo[0]._id,
-          time: moment(`2000-01-01 ${attInfo[0].attDatetime}`)
-            .format("YY-M-D A h시 m분")
-            .slice(7, 16),
+          time: formatTime,
           name: attInfo[0].memberId.name,
           message: attInfo[0].message,
         },
@@ -81,27 +94,24 @@ exports.getAttInfo = async (req, res, next) => {
     };
     result.push(object);
     for (let i = 1; i < attInfo.length; i++) {
-      if (
-        moment(attInfo[i].attDate).format("YYYY년 M월 D일 dd") ===
-        result[result.length - 1].date
-      ) {
+      const { formatDate, formatTime } = dateFormatFn(
+        attInfo[i].attDate,
+        attInfo[i].attDatetime
+      );
+      if (formatDate === result[result.length - 1].date) {
         result[result.length - 1].users.push({
           _id: attInfo[i]._id,
-          time: moment(`2000-01-01 ${attInfo[i].attDatetime}`)
-            .format("YY-M-D A h시 m분")
-            .slice(7, 16),
+          time: formatTime,
           name: attInfo[i].memberId.name,
           message: attInfo[i].message,
         });
       } else {
         object = {
-          date: moment(attInfo[i].attDate).format("YYYY년 M월 D일 dd"),
+          date: formatDate,
           users: [
             {
               _id: attInfo[i]._id,
-              time: moment(`2000-01-01 ${attInfo[i].attDatetime}`)
-                .format("YY-M-D A h시 m분")
-                .slice(7, 16),
+              time: formatTime,
               name: attInfo[i].memberId.name,
               message: attInfo[i].message,
             },
