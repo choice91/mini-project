@@ -64,7 +64,6 @@ exports.getAttInfo = async (req, res, next) => {
     if (attInfo.length === 0) {
       return res.status(200).json({ message: "출석 정보를 찾을 수 없습니다." });
     }
-    console.log(attInfo);
     // 날짜별로 result배열에 저장
     const result = [];
     let object = {
