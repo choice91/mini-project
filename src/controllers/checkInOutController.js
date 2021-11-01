@@ -40,8 +40,10 @@ exports.checkIn = async (req, res, next) => {
     const info = await Attendance.findOne({ memberId: userId }).sort({
       attDate: "desc",
     });
-    if (info.attDate === date) {
-      return res.status(200).json({ message: "이미 체크인 되었습니다." });
+    if (info) {
+      if (info.attDate === date) {
+        return res.status(200).json({ message: "이미 체크인 되었습니다." });
+      }
     }
     const checkInInfo = await Attendance.create({
       memberId: userId,
