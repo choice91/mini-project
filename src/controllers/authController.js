@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const moment = require("moment");
 
 const User = require("../models/user");
 
@@ -26,6 +27,7 @@ exports.signup = async (req, res, next) => {
       email,
       name,
       password: hashedPassword,
+      memberSince: moment().format("YYYY-MM-DD HH:mm:ss"),
     });
     return res
       .status(201)

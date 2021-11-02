@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -17,7 +16,6 @@ const userSchema = new mongoose.Schema({
   memberSince: {
     type: String,
     required: true,
-    default: moment().format("YYYY-MM-DD HH:mm:ss"),
   },
 });
 
