@@ -10,6 +10,7 @@ const swaggerFile = require("./swagger_output");
 const authRouter = require("./routes/authRouter");
 const checkInOutRouter = require("./routes/checkInOutRouter");
 const userRouter = require("./routes/userRouter");
+const oAuthRouter = require("./routes/oAuthRouter");
 
 const app = express();
 const logger = morgan("dev");
@@ -25,6 +26,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use("/auth", authRouter);
 app.use("/attandance", checkInOutRouter);
 app.use("/user", userRouter);
+app.use("/oAuth", oAuthRouter);
 
 app.use((error, req, res, next) => {
   console.log(error);
