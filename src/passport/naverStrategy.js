@@ -22,7 +22,15 @@ module.exports = () => {
             await user.save();
             return done(null, user);
           }
-          // 새로 가입
+          // 네이버 프로필 정보로 가입
+          const newUser = await User.create({
+            email: profile._json.email,
+            name: profile.displayName,
+            socialOnly: true,
+            provider: "naver",
+            socialId: profile._id,
+          });
+          return done(null, newUser);
         } catch (error) {
           console.log(error);
           done(error);

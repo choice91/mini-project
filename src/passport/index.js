@@ -1,5 +1,7 @@
 const passport = require("passport");
 
+const naver = require("./naverStrategy");
+
 module.exports = () => {
   passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -7,4 +9,6 @@ module.exports = () => {
   passport.deserializeUser((user, done) => {
     done(null, user);
   });
+
+  naver();
 };
