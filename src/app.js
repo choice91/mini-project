@@ -4,6 +4,8 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 require("./db");
+const passport = require("passport");
+const passportConfig = require("./passport");
 
 const swaggerFile = require("./swagger_output");
 
@@ -20,6 +22,8 @@ app.set("port", process.env.PORT || 4000);
 
 app.use(logger);
 app.use(express.json());
+app.use(passport.initialize());
+passportConfig();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

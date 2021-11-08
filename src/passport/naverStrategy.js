@@ -1,5 +1,6 @@
 const passport = require("passport");
 const NaverStrategy = require("passport-naver").Strategy;
+const moment = require("moment");
 
 const User = require("../models/user");
 
@@ -12,12 +13,11 @@ module.exports = () => {
         callbackURL: process.env.CALLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
-        console.log(accessToken);
-        console.log(refreshToken);
-        console.log(profile);
+        console.log("profile ::", profile);
         try {
           const user = await User.findOne({ socialId: profile.id });
           if (user) {
+            user.name = profile.displayName;
             user.socialId = profile.id;
             await user.save();
             return done(null, user);
@@ -28,7 +28,8 @@ module.exports = () => {
             name: profile.displayName,
             socialOnly: true,
             provider: "naver",
-            socialId: profile._id,
+            socialId: profile.id,
+            memberSince: moment().format("YYYY-MM-DD HH:mm:ss"),
           });
           return done(null, newUser);
         } catch (error) {

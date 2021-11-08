@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 exports.naverLogin = (req, res, next) => {
+  console.log("req.user ::", req.user);
   const { name, _id } = req.user;
   try {
     const payload = { name, userId: _id };
