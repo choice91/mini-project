@@ -17,6 +17,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  socialOnly: {
+    type: Boolean,
+    default: false,
+  },
+  socialId: {
+    type: String,
+  },
+  provider: {
+    type: String,
+    required: true,
+    default: "local",
+  },
 });
 
 const User = mongoose.model("User", userSchema);
