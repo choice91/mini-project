@@ -4,12 +4,15 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 require("./db");
+const passport = require("passport");
+const passportConfig = require("./passport");
 
 const swaggerFile = require("./swagger_output");
 
 const authRouter = require("./routes/authRouter");
 const checkInOutRouter = require("./routes/checkInOutRouter");
 const userRouter = require("./routes/userRouter");
+const oAuthRouter = require("./routes/oAuthRouter");
 
 const app = express();
 const logger = morgan("dev");
@@ -19,12 +22,15 @@ app.set("port", process.env.PORT || 4000);
 
 app.use(logger);
 app.use(express.json());
+app.use(passport.initialize());
+passportConfig();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use("/auth", authRouter);
 app.use("/attandance", checkInOutRouter);
 app.use("/user", userRouter);
+app.use("/oAuth", oAuthRouter);
 
 app.use((error, req, res, next) => {
   console.log(error);

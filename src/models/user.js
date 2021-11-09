@@ -11,11 +11,23 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   memberSince: {
     type: String,
     required: true,
+  },
+  socialOnly: {
+    type: Boolean,
+    default: false,
+  },
+  socialId: {
+    type: String,
+    default: null,
+  },
+  provider: {
+    type: String,
+    required: true,
+    default: "local",
   },
 });
 
