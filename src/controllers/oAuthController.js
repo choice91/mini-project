@@ -9,7 +9,9 @@ exports.naverLogin = (req, res, next) => {
     const token = jwt.sign(payload, process.env.JWT_KEY, options);
     return res
       .status(200)
-      .redirect(`http://localhost:3000/naver?token=${token}`);
+      .redirect(
+        `http://atts.com.s3-website.ap-northeast-2.amazonaws.com//naver?token=${token}`
+      );
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
