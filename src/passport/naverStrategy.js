@@ -13,6 +13,8 @@ module.exports = () => {
         callbackURL: process.env.CALLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
+        console.log("accessToken ::", accessToken);
+        console.log("refreshToken ::", refreshToken);
         console.log("profile ::", profile);
         try {
           const user = await User.findOne({ socialId: profile.id });

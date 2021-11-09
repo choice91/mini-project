@@ -8,11 +8,7 @@ exports.getUserProfile = async (req, res, next) => {
   const { userId } = req;
   try {
     // 사용자정보 검색
-    const user = await User.findById(userId, {
-      email: 1,
-      name: 1,
-      memberSince: 1,
-    });
+    const user = await User.findById(userId);
     if (!user) {
       return res
         .status(204)
@@ -28,9 +24,17 @@ exports.getUserProfile = async (req, res, next) => {
         .status(204)
         .json({ ok: false, message: "출석 정보 조회 실패" });
     }
+    let userEmail;
+    if (user.provider === "local") {
+      userEmail = user.email;
+    } else if (user.provider === "naver") {
+      userEmail = "네이버로 로그인 되었습니다.";
+    }
     return res.status(200).json({
       ok: true,
-      user: user,
+      email: userEmail,
+      name: user.name,
+      subscriptionDate: user.memberSince,
       daysOfAttendance: daysOfAttendance,
       numberOfDaysOfAtt: daysOfAttendance.length,
     });
