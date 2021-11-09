@@ -10,7 +10,7 @@ exports.naverLogin = (req, res, next) => {
     return res
       .status(200)
       .redirect(
-        `http://atts.com.s3-website.ap-northeast-2.amazonaws.com//naver?token=${token}`
+        `http://atts.com.s3-website.ap-northeast-2.amazonaws.com/naver?token=${token}`
       );
   } catch (error) {
     if (!error.statusCode) {
