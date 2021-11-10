@@ -14,11 +14,11 @@ module.exports = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const user = await User.findOne({ socialId: profile.id });
+          const user = await User.findOne({
+            socialId: profile.id,
+            provider: "naver",
+          });
           if (user) {
-            user.name = profile.displayName;
-            user.socialId = profile.id;
-            await user.save();
             return done(null, user);
           }
           // 네이버 프로필 정보로 가입
