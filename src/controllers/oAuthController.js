@@ -22,3 +22,19 @@ exports.naverLogin = (req, res, next) => {
     next(error);
   }
 };
+
+exports.kakaoLogin = (req, res, next) => {
+  console.log("req.user ::", req.user);
+  const { name, _id } = req.user;
+  try {
+    const payload = { name, userId: _id };
+    const options = { expiresIn: "1h" };
+    const token = jwt.sign(payload, process.env.JWT_KEY, options);
+    return res.status(200).redirect(`${clientUrl}/kakao?token=${token}`);
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
+  }
+};
