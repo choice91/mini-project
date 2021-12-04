@@ -66,7 +66,7 @@ exports.login = async (req, res, next) => {
       userId: user._id.toString(),
     };
     // 옵션
-    const options = { expiresIn: "1h" };
+    const options = { expiresIn: "30d" };
     // 토큰
     const token = jwt.sign(payload, process.env.JWT_KEY, options);
     return res.status(200).json({
